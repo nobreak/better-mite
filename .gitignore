@@ -19,3 +19,4 @@
 ###< symfony/web-server-bundle ###
 
 /public/credentials.json
+/public/token.json
