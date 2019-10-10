@@ -1,0 +1,9 @@
+services:
+    - { id: 253445, name: Development }
+    - { id: 382530, name: 'Non-project: Chapter 1on1' }
+    - { id: 412116, name: 'Non-project: Chapter Forum' }
+    - { id: 344427, name: 'Non-project: Sonstiges / Others' }
+    - { id: 412110, name: 'Non-project: Town Hall Meeting / Tuesday Morning Meeting' }
+    - { id: 351335, name: 'Non-project: Weiterbildung / Training' }
+    - { id: 253443, name: 'Senior Development' }
+    - { id: 370974, name: 'Non-project: Mitarbeitergespräch/Employee Performance Review/Skill-Will/Recruiting' }

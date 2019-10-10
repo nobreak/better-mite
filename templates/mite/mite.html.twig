@@ -1,0 +1,152 @@
+
+{# templates/mite/mite.html.twig #}
+{% extends 'base.html.twig' %}
+
+
+{% block stylesheets %}
+{{ parent() }}
+
+{% endblock %}
+
+
+{% block javascripts %}
+{{ parent() }}
+
+<script type="text/javascript">
+	{{serviceMapping|raw}}
+</script>
+
+{% endblock %} 
+
+
+
+
+
+
+{% block leftbody %}
+
+
+
+
+		<p>
+		<div class="form-inline">
+			<label for="datePicker"><h4>Your Mite entries at:&nbsp;</h4></label>
+  			<input class="form-control" type="date" value="{{date}}" id="datePicker">
+  			
+		</div>
+		</p>
+
+		<script>
+			let datePicker = document.getElementById('datePicker');
+
+			datePicker.onchange = function(){
+				var urlSrting = datePicker.value.replace(/-/g, "/");	
+ 			  	window.open("/mite/" + urlSrting, "_self");
+			};
+			
+		</script>
+
+		{% if miteEntries  %}
+			<table class="table table-striped">
+			<thead class="thead-dark">
+				<tr>
+					<th scope="col">Message</th> 
+					<th scope="col">Minutes</th>
+					<th scope="col">Project</th>
+					<th scope="col">Service</th>
+					<th scope="col" width=20>Actions</th>
+					
+				</tr>
+			</thead>
+			<tbody>
+			{% for item in miteEntries %}
+				<tr>
+					<td scope="row">{{ item.time_entry.note }}</td>
+					<td scope="row">{{ item.time_entry.minutes }}</td>
+					<td scope="row">{{ item.time_entry.project_name }}</td>
+					<td scope="row">{{ item.time_entry.service_name }}</td>
+					<td scope="row"><nobr><button class="btn" ><i class="fa fa-pencil"></i></button><button class="btn" onclick="location.href='{{ path('delete_mite_entry', {id: item.time_entry.id, date: date}) }}'"><i class="fa fa-trash"></i></button></nobr></td>
+					
+				</tr>
+			{% endfor %}
+			</tbody>
+			</table>
+
+			<p>
+				<div class="progress" style="height: 30px;">
+	  				<div class="progress-bar bg-info" role="progressbar" style="width: {{currentPercent}}%" aria-valuenow="{{countMinutes}}" aria-valuemin="0" aria-valuemax="{{maxMinutes}}">{{currentPercent}}% - Still missing {{missingMinutesStr}} .</div>
+				</div>
+			</p>
+
+		{% else %}
+			<div class="alert alert-info" role="alert">
+				No Mite entries exists for this day. 
+			</div>
+		{% endif %}	
+
+
+
+		<h4> Add new Mite entry:</h4>
+		{{ form_start(addMiteEntryForm) }}
+			<div class="row">
+				<div class="col-sm-4">
+					{{ form_row(addMiteEntryForm.message, {'attr': {'class': 'form-control', 'placeholder': 'Your Message'}}) }}
+				</div>
+				<div class="col-sm-1">
+					{{ form_row(addMiteEntryForm.minutes, {'attr': {'class': 'form-control', 'placeholder': 'Minutes'}}) }}
+				</div>
+
+				<div class="col-sm">
+					{{ form_row(addMiteEntryForm.project, {'attr': {'class': 'form-control'}}) }}
+				</div>
+				<div class="col-sm">
+					{{ form_row(addMiteEntryForm.service, {'attr': {'class': 'form-control'}}) }}
+				</div>
+
+				<div class="col-sm-2">
+					{{ form_row(addMiteEntryForm.saveBtn, {'attr': {'class': 'btn btn-primary'}, 'label': 'Add Entry'}) }}
+					{{ form_row(addMiteEntryForm.date) }}
+				</div>
+			</div>	
+		 {{ form_end(addMiteEntryForm) }}
+
+
+{% endblock %}
+
+
+
+{% block rightbody %}
+		<a class="btn btn-primary" data-toggle="collapse" href="#collapseCalendar" role="button" aria-expanded="true" aria-controls="collapseCalendar">
+    Calendar Entries
+  		</a>
+  		<div class="collapse show" id="collapseCalendar">
+			<h3>Deine Kalendereinträge am {{date}}:</h3>
+
+			{% if events  %}
+				<button type="button" class="btn btn-link">Mark All</button>
+			<form>
+				<table>
+				<table class="table table-striped">
+				<tbody>
+				{% for item in events %}
+					<tr>
+						<td scope="row">{{ item.title }} </td>
+						<td scope="row">{{ item.StartDateTime|date('H:i') }} - {{ item.EndDateTime|date('H:i') }} </td>
+						<td scope="row">{{item.diffDates }} </td>
+					</tr>
+				{% endfor %}
+				</tbody>
+				</table>
+			</form>	
+
+			{% else %}
+				<div class="alert alert-info" role="alert">
+					No calendar entries exists for this day.
+				</div>	
+			{% endif %}	
+		</div> <!-- collapse //-->
+{% endblock %}
+
+
+
+

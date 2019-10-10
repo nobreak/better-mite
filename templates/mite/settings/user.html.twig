@@ -1,0 +1,31 @@
+{# templates/mite/settings/user.html.twig #}
+{% extends 'base.html.twig' %}
+
+
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+
+
+{% block leftbody_settings %}
+
+
+<h4>Your personal settings</h4>
+<p>
+	
+		<div>
+			
+			{{ form_start(form) }}
+			<div class="row">
+				<div class="col-sm-12">
+					{{ form_row(form.workingHoursPerDay) }}
+				</div>
+			</div>	
+
+			<div class="col-sm-12">
+					{{ form_row(form.saveBtn, {'attr': {'class': 'btn btn-primary'}, 'label': 'Update'}) }}
+			</div>
+
+		    {{ form_end(form) }}
+		</div>
+
+{% endblock %}
+

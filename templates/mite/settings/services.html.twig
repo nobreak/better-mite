@@ -1,0 +1,54 @@
+{# templates/mite/settings/services.html.twig #}
+{% extends 'base.html.twig' %}
+
+
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+
+
+{% block leftbody_settings %}
+
+
+<h4>Your Default Services</h4>
+Here you could define which services you want to have to select when making a new new mite entry (we think you maybe don't want to see all your company services). 
+<p>
+	{% if defaultServices is defined and defaultServices is not null and defaultServices|length > 0 %}
+			<table class="table table-striped">
+			<thead class="thead-dark">
+				<tr>
+					<th scope="col">Service</th> 
+					<th scope="col" width=1>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+			
+			{% for service in defaultServices %}
+				<tr>
+					<td scope="row">{{ service.name }}</td>
+					<td scope="row"><button class="btn" onclick="location.href='{{ path('delete_default_service', {id: service.id}) }}';" ><i class="fa fa-trash"></i></button></td>
+				</tr>
+			{% endfor %}
+			
+			</tbody>
+			</table>
+	{% else %}
+		<div class="alert alert-warning" role="alert">
+			Currently there are no services at Mite readable!
+		</div>
+	{% endif %}	
+		<div>
+			
+			{{ form_start(form) }}
+			<div class="row">
+				<div class="col-sm-5">
+					{{ form_row(form.service) }}
+				</div>
+
+				<div class="col-sm-2">
+					{{ form_row(form.saveBtn, {'attr': {'class': 'btn btn-primary'}, 'label': 'Add Service'}) }}
+				</div>
+			</div>	
+		        {{ form_end(form) }}
+		</div>
+
+{% endblock %}
+
