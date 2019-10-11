@@ -1,0 +1,67 @@
+{# templates/mite/settings/dailyMiteEntries.html.twig #}
+{% extends 'base.html.twig' %}
+
+
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+
+
+{% block leftbody_settings %}
+
+
+<h4>Your Daily Mite Entries</h4>
+Here you could configure Mite entries which should be booked every day.<p>
+	{% if dailyMiteEntries is defined and dailyMiteEntries is not null and dailyMiteEntries|length > 0 %}
+			<table class="table table-striped">
+			<thead class="thead-dark">
+				<tr>
+					<th scope="col">Message</th> 
+					<th scope="col">Minutes</th> 
+					<th scope="col">Project</th> 
+					<th scope="col">Service</th>
+					<th scope="col" width=1>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+			
+			{% for entry in dailyMiteEntries %}
+				<tr>
+					<td scope="row">{{ entry.message }}</td>
+					<td scope="row">{{ entry.minutes }}</td>
+					<td scope="row">{{ entry.projectName }}</td>
+					<td scope="row">{{ entry.serviceName }}</td>
+					<td scope="row"><button class="btn" onclick="location.href='{{ path('delete_daily_mite_entry', {id: entry.id}) }}';" ><i class="fa fa-trash"></i></button></td>
+				</tr>
+			{% endfor %}
+			
+			</tbody>
+			</table>
+	{% else %}
+		<div class="alert alert-warning" role="alert">
+			Currently there are no daily Mite entries configured!
+		</div>
+	{% endif %}	
+		<h4> Add new daily Mite entry:</h4>
+		{{ form_start(form) }}
+			<div class="row">
+				<div class="col-sm-4">
+					{{ form_row(form.message, {'attr': {'class': 'form-control', 'placeholder': 'Your Message'}}) }}
+				</div>
+				<div class="col-sm-1">
+					{{ form_row(form.minutes, {'attr': {'class': 'form-control', 'placeholder': 'Minutes'}}) }}
+				</div>
+
+				<div class="col-sm">
+					{{ form_row(form.project, {'attr': {'class': 'form-control'}}) }}
+				</div>
+				<div class="col-sm">
+					{{ form_row(form.service, {'attr': {'class': 'form-control'}}) }}
+				</div>
+
+				<div class="col-sm-2">
+					{{ form_row(form.saveBtn, {'attr': {'class': 'btn btn-primary'}, 'label': 'Add Entry'}) }}
+				</div>
+			</div>	
+		 {{ form_end(form) }}
+
+{% endblock %}
+
