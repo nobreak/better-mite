@@ -111,6 +111,42 @@
 		 {{ form_end(addMiteEntryForm) }}
 
 
+		 <p>
+		 <h4> Suggestions for this day:</h4>
+		 {% if suggestionList  %}
+			<table class="table table-striped">
+			<thead class="thead-dark">
+				<tr>
+					<th scope="col" width=20>Actions</th>
+					<th scope="col">Message</th> 
+					<th scope="col">Minutes</th>
+					<th scope="col">Project</th>
+					<th scope="col">Service</th>
+				</tr>
+			</thead>
+
+			<tbody>
+			{% for item in suggestionList %}
+				<tr>
+					<td scope="row"><input type="checkbox"></input></td>
+					<td scope="row">{{ item.message }}</td>
+					<td scope="row">{{ item.minutes }}</td>
+					<td scope="row">{{ item.projectName }}</td>
+					<td scope="row">{{ item.serviceName }}</td>
+				</tr>
+			{% endfor %}
+			</tbody>
+			</table>
+		{% else %}
+			<div class="alert alert-info" role="alert">
+				No suggestions for this day. 
+			</div>
+		{% endif %}	
+		</p>
+
+
+
+
 {% endblock %}
 
 
