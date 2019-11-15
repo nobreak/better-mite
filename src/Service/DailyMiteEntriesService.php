@@ -11,7 +11,7 @@ use Symfony\Component\Yaml\Yaml;
 
 class DailyMiteEntriesService
 {
-	public function readDailyMiteEntries()
+	  public function readDailyMiteEntries()
     {
       $assetPath = "file://".$_SERVER['DOCUMENT_ROOT'] . "assets";
       $assets = new UrlPackage($assetPath,new EmptyVersionStrategy());
@@ -27,6 +27,22 @@ class DailyMiteEntriesService
       return $yamlDailyMiteEntries->dailyMiteEntries;
     }
 
+
+    public function readDailyMiteEntriesForWeekday($weekday)
+    {
+        $allEntries = $this->readDailyMiteEntries();
+
+        $filteredArray = array_filter( $allEntries,
+            function ($e) use (&$weekday) {
+                if (in_array($weekday, $e->weekdays)) {
+                  return true;
+                } else {
+                  return false;
+                }
+            }
+        );
+        return $filteredArray;
+    }
 
 
     public function addDailyMiteEntry($newDailyMiteEntry)

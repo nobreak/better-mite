@@ -46,6 +46,7 @@ class MiteController extends AbstractController
                                      Request $request, $year, $month, $day)
     {
         $date = date('Y-m-d', mktime(0,0,0,$month, $day, $year));
+        $weekday = date("w", mktime(0,0,0,$month, $day, $year));    
 
         $addMiteEntry = new MiteEntry();
         $addMiteEntry->setDate($date);
@@ -114,8 +115,9 @@ class MiteController extends AbstractController
             })";
 
 
-        // build suggestion list
-        $suggestionList = $dailyMiteEntriesService->readDailyMiteEntries();            
+        // build suggestion list for today
+        // weekday
+        $suggestionList = $dailyMiteEntriesService->readDailyMiteEntriesForWeekday($weekday);            
 
         return $this->render('mite/mite.html.twig', [
             'events' => $events,
