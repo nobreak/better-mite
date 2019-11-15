@@ -53,9 +53,24 @@ class DailyMiteEntryFormType extends AbstractType
                 'placeholder' => 'Select a service',
                 'choices' => $this->getMiteServices(), 
                 'choice_label' => 'name', 
-                'choice_value' => 'id', 
-
+                'choice_value' => 'id' 
             ])
+            ->add('weekdays', ChoiceType::class,  [
+                'label' => false,
+                'placeholder' => 'Select weekdays',
+                'choices'  => [
+                    'Monday' => 0,
+                    'Tuesday' => 1,
+                    'Wednesday' => 2,
+                    'Thursday' => 3,
+                    'Friday' => 4,
+                    'Saturday' => 5,
+                    'Sunday' => 6,
+                ],
+                'expanded' => false,
+                'multiple' => true
+            ])
+
             ->add('saveBtn', SubmitType::class);
     }
 

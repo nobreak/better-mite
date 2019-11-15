@@ -10,6 +10,7 @@ use App\Entity\BaseMiteEntry;
 class DailyMiteEntryEntity extends BaseMiteEntry
 {
     private $id;
+    private $weekdays;
 
     public function __construct()
     {
@@ -27,4 +28,16 @@ class DailyMiteEntryEntity extends BaseMiteEntry
         $this->id = $id;
         return $this;
     }
+
+    public function getWeekdays(): ?array
+    {
+        return $this->weekdays;
+    }
+
+    public function setWeekdays(array $weekdays): self
+    {
+        $this->weekdays = $weekdays;
+        return $this;
+    }
+
 }

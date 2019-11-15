@@ -5,7 +5,7 @@
 {% form_theme form 'bootstrap_4_layout.html.twig' %}
 
 
-{% block leftbody_settings %}
+{% block body %}
 
 
 <h4>Your Daily Mite Entries</h4>
@@ -18,6 +18,7 @@ Here you could configure Mite entries which should be booked every day.<p>
 					<th scope="col">Minutes</th> 
 					<th scope="col">Project</th> 
 					<th scope="col">Service</th>
+					<th scope="col">Weekdays</th>
 					<th scope="col" width=1>Actions</th>
 				</tr>
 			</thead>
@@ -29,6 +30,25 @@ Here you could configure Mite entries which should be booked every day.<p>
 					<td scope="row">{{ entry.minutes }}</td>
 					<td scope="row">{{ entry.projectName }}</td>
 					<td scope="row">{{ entry.serviceName }}</td>
+					<td scope="row">
+						{% for weekday in entry.weekdays %}
+							{% if weekday == 0 %}
+								Mo
+							{% elseif weekday == 1 %}
+								Tu
+							{% elseif weekday == 2 %}
+								We
+							{% elseif weekday == 3 %}
+								Th
+							{% elseif weekday == 4 %}
+								Fr
+							{% elseif weekday == 5 %}
+								Sa
+							{% elseif weekday == 6 %}
+								Su
+							{% endif %}	
+						{% endfor %}			
+					</td>
 					<td scope="row"><button class="btn" onclick="location.href='{{ path('delete_daily_mite_entry', {id: entry.id}) }}';" ><i class="fa fa-trash"></i></button></td>
 				</tr>
 			{% endfor %}
@@ -56,6 +76,10 @@ Here you could configure Mite entries which should be booked every day.<p>
 				<div class="col-sm">
 					{{ form_row(form.service, {'attr': {'class': 'form-control'}}) }}
 				</div>
+				<div class="col-sm">
+					{{ form_row(form.weekdays, {'attr': {'class': 'form-control'}}) }}
+				</div>
+
 
 				<div class="col-sm-2">
 					{{ form_row(form.saveBtn, {'attr': {'class': 'btn btn-primary'}, 'label': 'Add Entry'}) }}

@@ -70,6 +70,7 @@ class DailyMiteEntriesService
         $object->projectId = 13579;
         $object->projectName = "project dummy";
         $object->minutes = 30;
+        $object->weekdays = [0,1,2,3,4];
 
 
 
@@ -109,6 +110,7 @@ class DailyMiteEntriesService
         $object->serviceName = $dailyMiteEntryEntity->getService()->getName();
         $object->projectId = $dailyMiteEntryEntity->getProject()->getId();
         $object->projectName = $dailyMiteEntryEntity->getProject()->getName();
+        $object->weekdays = $dailyMiteEntryEntity->getWeekdays();
 
 
         return $object;
