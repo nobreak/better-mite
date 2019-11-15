@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Service\MiteService;
 use App\Service\DefaultProjectsService;
 use App\Service\UserService;
+use App\Service\DailyMiteEntriesService;
 use App\Entity\MiteEntry;
 use App\Form\AddMiteEntryFormType;
 
@@ -25,16 +26,24 @@ class MiteController extends AbstractController
 	   /**
       * @Route("/mite")
       */
-    public function renderMite(MiteService $miteService, DefaultProjectsService $defaultProjectsService, UserService $userService, Request $request)
+    public function renderMite(MiteService $miteService, 
+                               DefaultProjectsService $defaultProjectsService, 
+                               UserService $userService, 
+                               DailyMiteEntriesService $dailyMiteEntriesService,
+                               Request $request)
     {
-        return $this->renderMiteByDate($miteService, $defaultProjectsService, $userService, $request, date("Y"), date('m'), date('d'));
+        return $this->renderMiteByDate($miteService, $defaultProjectsService, $userService, $dailyMiteEntriesService, $request, date("Y"), date('m'), date('d'));
     }
 
 
      /**
       * @Route("/mite/{year<\d+>}/{month<\d+>}/{day<\d+>}", name="show_mite_entries_by_date")
       */
-    public function renderMiteByDate(MiteService $miteService, DefaultProjectsService $defaultProjectsService, UserService $userService, Request $request, $year, $month, $day)
+    public function renderMiteByDate(MiteService $miteService, 
+                                     DefaultProjectsService $defaultProjectsService, 
+                                     UserService $userService, 
+                                     DailyMiteEntriesService $dailyMiteEntriesService,
+                                     Request $request, $year, $month, $day)
     {
         $date = date('Y-m-d', mktime(0,0,0,$month, $day, $year));
 
@@ -50,8 +59,6 @@ class MiteController extends AbstractController
 
             $miteService->addMiteEntry($newMiteEntry);
         }
-
-
 
 
         $events = $this->getCalendarEvents($date);
@@ -107,6 +114,9 @@ class MiteController extends AbstractController
             })";
 
 
+        // build suggestion list
+        $suggestionList = $dailyMiteEntriesService->readDailyMiteEntries();            
+
         return $this->render('mite/mite.html.twig', [
             'events' => $events,
             'date' => $date,
@@ -120,6 +130,7 @@ class MiteController extends AbstractController
             'miteServices' => $miteServices,
             'addMiteEntryForm' => $addMiteEntryForm->createView(),
             'serviceMapping' => $js,
+            'suggestionList' => $suggestionList,
         ]);
 
     }
