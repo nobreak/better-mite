@@ -69,9 +69,7 @@ class AddMiteEntryFormType extends AbstractType
         $projectsArrStdClass = $this->defaultProjectsService->readDefaultProjects();
         $projects = array();
         foreach ($projectsArrStdClass as $key => $value) {
-            $project = new Project();
-            $project->setId($value->id);
-            $project->setName($value->name);
+            $project = new Project($value->id, $value->name );
             array_push($projects, $project);
         }
         return $projects;
@@ -84,9 +82,7 @@ class AddMiteEntryFormType extends AbstractType
         $servicesArrStdClass = $this->defaultServicesService->readDefaultServices();
         $services = array();
         foreach ($servicesArrStdClass as $key => $value) {
-            $service = new Service();
-            $service->setId($value->id);
-            $service->setName($value->name);
+            $service = new Service($value->id, $value->name );
             array_push($services, $service);
         }
         return $services;

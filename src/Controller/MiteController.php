@@ -13,6 +13,8 @@ use App\Service\MiteService;
 use App\Service\DefaultProjectsService;
 use App\Service\UserService;
 use App\Service\DailyMiteEntriesService;
+use App\Service\SuggestionListService;
+
 use App\Entity\MiteEntry;
 use App\Form\AddMiteEntryFormType;
 
@@ -30,9 +32,10 @@ class MiteController extends AbstractController
                                DefaultProjectsService $defaultProjectsService, 
                                UserService $userService, 
                                DailyMiteEntriesService $dailyMiteEntriesService,
+                               SuggestionListService $suggestionListService,
                                Request $request)
     {
-        return $this->renderMiteByDate($miteService, $defaultProjectsService, $userService, $dailyMiteEntriesService, $request, date("Y"), date('m'), date('d'));
+        return $this->renderMiteByDate($miteService, $defaultProjectsService, $userService, $dailyMiteEntriesService, $suggestionListService, $request, date("Y"), date('m'), date('d'));
     }
 
 
@@ -43,6 +46,7 @@ class MiteController extends AbstractController
                                      DefaultProjectsService $defaultProjectsService, 
                                      UserService $userService, 
                                      DailyMiteEntriesService $dailyMiteEntriesService,
+                                     SuggestionListService $suggestionListService,
                                      Request $request, $year, $month, $day)
     {
         $date = date('Y-m-d', mktime(0,0,0,$month, $day, $year));
@@ -68,7 +72,7 @@ class MiteController extends AbstractController
         $miteServices = $miteService->getMiteServices();
 
 
-        // calculate mising time
+        // calculate missing time
         $countMinutes = 0;
         foreach ($miteEntries as $key => $entry) {
           $countMinutes += $entry->time_entry->minutes;
@@ -116,8 +120,9 @@ class MiteController extends AbstractController
 
 
         // build suggestion list for today
-        // weekday
-        $suggestionList = $dailyMiteEntriesService->readDailyMiteEntriesForWeekday($weekday);            
+        
+        $dailyMiteEntries = $dailyMiteEntriesService->readDailyMiteEntriesForWeekday($weekday);            
+        $suggestionList = $suggestionListService->createSuggestionList($dailyMiteEntries, $events, $miteEntries);
 
         return $this->render('mite/mite.html.twig', [
             'events' => $events,

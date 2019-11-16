@@ -131,8 +131,8 @@
 					<td scope="row"><input type="checkbox"></input></td>
 					<td scope="row">{{ item.message }}</td>
 					<td scope="row">{{ item.minutes }}</td>
-					<td scope="row">{{ item.projectName }}</td>
-					<td scope="row">{{ item.serviceName }}</td>
+					<td scope="row">{{ item.project.name }}</td>
+					<td scope="row">{{ item.service.name }}</td>
 				</tr>
 			{% endfor %}
 			</tbody>

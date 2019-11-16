@@ -48,9 +48,7 @@ class DefaultServiceFormType extends AbstractType
         $servicesStdClass = $this->miteService->getMiteServices();
         $services = array();
         foreach ($servicesStdClass as $key => $value) {
-            $service = new Service();
-            $service->setId($value->service->id);
-            $service->setName($value->service->name);
+            $service = new Service($value->service->id,$value->service->name);
             array_push($services, $service);
         }
 
