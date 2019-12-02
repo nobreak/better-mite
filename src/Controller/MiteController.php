@@ -179,13 +179,14 @@ class MiteController extends AbstractController
         $item;
         foreach ($allSuggestions as $suggestion)
         {
-            if ($suggestion->id == $value) {
+            if ($suggestion->getId() == $value) {
               $item = $suggestion;
               break;
             }
         }
 
         // add it to mite        
+        $item->setDate($date);
         $miteService->addMiteEntry($item);
       }
 
