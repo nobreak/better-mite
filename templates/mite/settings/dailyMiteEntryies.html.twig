@@ -32,19 +32,19 @@ Here you could configure Mite entries which should be booked every day.<p>
 					<td scope="row">{{ entry.serviceName }}</td>
 					<td scope="row">
 						{% for weekday in entry.weekdays %}
-							{% if weekday == 0 %}
+							{% if weekday == 1 %}
 								Mo
-							{% elseif weekday == 1 %}
-								Tu
 							{% elseif weekday == 2 %}
-								We
+								Tu
 							{% elseif weekday == 3 %}
-								Th
+								We
 							{% elseif weekday == 4 %}
-								Fr
+								Th
 							{% elseif weekday == 5 %}
-								Sa
+								Fr
 							{% elseif weekday == 6 %}
+								Sa
+							{% elseif weekday == 0 %}
 								Su
 							{% endif %}	
 						{% endfor %}			
