@@ -1,2 +1,3 @@
 dailyMiteEntries:
     - { id: 5dd1b4c0ee20a, message: 'Administratives und Organisatorisches', minutes: 60, serviceId: 344427, serviceName: 'Non-project: Sonstiges / Others', projectId: 1147952, projectName: 'Sonstige interne Aufgaben / Other internal Tasks ', weekdays: [1, 2, 3, 4, 5] }
+    - { id: 5de54bf4e29fc, message: testEntry, minutes: 30, serviceId: 253439, serviceName: '2D Art & Animation', projectId: 2740062, projectName: ' Audi | Technical Consulant', weekdays: [1] }

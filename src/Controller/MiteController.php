@@ -14,6 +14,7 @@ use App\Service\DefaultProjectsService;
 use App\Service\UserService;
 use App\Service\DailyMiteEntriesService;
 use App\Service\SuggestionListService;
+use App\Service\ApplicationGlobalsService;
 
 use App\Entity\MiteEntry;
 use App\Form\AddMiteEntryFormType;
@@ -33,9 +34,10 @@ class MiteController extends AbstractController
                                UserService $userService, 
                                DailyMiteEntriesService $dailyMiteEntriesService,
                                SuggestionListService $suggestionListService,
+                               ApplicationGlobalsService $appGlobalsService, 
                                Request $request)
     {
-        return $this->renderMiteByDate($miteService, $defaultProjectsService, $userService, $dailyMiteEntriesService, $suggestionListService, $request, date("Y"), date('m'), date('d'));
+        return $this->renderMiteByDate($miteService, $defaultProjectsService, $userService, $dailyMiteEntriesService, $suggestionListService, $appGlobalsService, $request, date("Y"), date('m'), date('d'));
     }
 
 
@@ -47,6 +49,7 @@ class MiteController extends AbstractController
                                      UserService $userService, 
                                      DailyMiteEntriesService $dailyMiteEntriesService,
                                      SuggestionListService $suggestionListService,
+                                     ApplicationGlobalsService $appGlobalsService,
                                      Request $request, $year, $month, $day)
     {
         $date = date('Y-m-d', mktime(0,0,0,$month, $day, $year));
@@ -124,6 +127,9 @@ class MiteController extends AbstractController
         $dailyMiteEntries = $dailyMiteEntriesService->readDailyMiteEntriesForWeekday($weekday);            
         $suggestionList = $suggestionListService->createSuggestionList($dailyMiteEntries, $events, $miteEntries);
 
+        // we need to save all suggestion for later use when the form comes back to get the object
+        $appGlobalsService->setSuggestionList($suggestionList);
+
         return $this->render('mite/mite.html.twig', [
             'events' => $events,
             'date' => $date,
@@ -159,6 +165,40 @@ class MiteController extends AbstractController
       return $this->redirectToRoute('show_mite_entries_by_date', $parameters);
     }
 
+
+     /**
+      * @Route("/mite/addSuggestions/{date}", name="add_suggestions")
+      */
+    public function addSuggestions(MiteService $miteService, ApplicationGlobalsService $appGlobalsService, Request $request, $date)
+    {
+      // all temp saved suggestions
+      $allSuggestions = $appGlobalsService->getSuggestionList();
+
+      // find selected suggestions from form in this
+      foreach ($request->request as $key => $value) {
+        $item;
+        foreach ($allSuggestions as $suggestion)
+        {
+            if ($suggestion->id == $value) {
+              $item = $suggestion;
+              break;
+            }
+        }
+
+        // add it to mite        
+        $miteService->addMiteEntry($item);
+      }
+
+      $appGlobalsService->resetSuggestionList();
+
+      $year = date('Y', strtotime($date));
+      $month = date('m', strtotime($date));
+      $day = date('d', strtotime($date));
+      // show the updated list
+      $parameters = ['miteService' => $miteService, 'year' => $year, 'month' => $month, 'day' => $day];
+
+      return $this->redirectToRoute('show_mite_entries_by_date', $parameters);
+    }
 
 
   function getCalendarEvents($date)

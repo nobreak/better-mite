@@ -114,6 +114,7 @@
 		 <p>
 		 <h4> Suggestions for this day:</h4>
 		 {% if suggestionList  %}
+		 	<form id="addSuggestions" name="addSuggestions" method="Post" action="{{ path('add_suggestions', {date: date}) }}">
 			<table class="table table-striped">
 			<thead class="thead-dark">
 				<tr>
@@ -128,7 +129,7 @@
 			<tbody>
 			{% for item in suggestionList %}
 				<tr>
-					<td scope="row"><input type="checkbox"></input></td>
+					<td scope="row"><input type="checkbox" id="{{ item.id }}" value="{{ item.id }}" name="{{ item.id }}" checked ></input></td>
 					<td scope="row">{{ item.message }}</td>
 					<td scope="row">{{ item.minutes }}</td>
 					<td scope="row">{{ item.project.name }}</td>
@@ -137,6 +138,8 @@
 			{% endfor %}
 			</tbody>
 			</table>
+			<button type="submit" class="btn btn-primary">Add selected to Mite</button>
+			</form>
 		{% else %}
 			<div class="alert alert-info" role="alert">
 				No suggestions for this day. 

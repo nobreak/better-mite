@@ -79,9 +79,7 @@ class DailyMiteEntryFormType extends AbstractType
         $projectsStdClass = $this->miteService->getMiteProjects();
         $projects = array();
         foreach ($projectsStdClass as $key => $value) {
-            $project = new Project();
-            $project->setId($value->project->id);
-            $project->setName($value->project->name);
+            $project = new Project($value->project->id, $value->project->name);
             array_push($projects, $project);
         }
         return $projects;
@@ -92,9 +90,7 @@ class DailyMiteEntryFormType extends AbstractType
         $servicesStdClass = $this->miteService->getMiteServices();
         $services = array();
         foreach ($servicesStdClass as $key => $value) {
-            $service = new Service();
-            $service->setId($value->service->id);
-            $service->setName($value->service->name);
+            $service = new Service($value->service->id, $value->service->name);
             array_push($services, $service);
         }
 
