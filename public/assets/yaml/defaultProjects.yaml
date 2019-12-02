@@ -1,9 +1,12 @@
 projects:
     - { id: 2718976, name: 'a&o | Betreuung 2019', serviceId: 253443, serviceName: 'Senior Development' }
+    - { id: 2706030, name: 'BfR | Pflegekontingent 2019', serviceId: 253445, serviceName: Development }
     - { id: 2724681, name: 'Europapark App', serviceId: 253443, serviceName: 'Senior Development' }
     - { id: 2653240, name: 'mobile.de 360 PICs Betreuung', serviceId: 253445, serviceName: Development }
     - { id: 2830845, name: 'Nativer Check-in', serviceId: 253443, serviceName: 'Senior Development' }
+    - { id: 2815457, name: 'SALES - Faurecia | Android App für Massagematte 2019', serviceId: 253445, serviceName: Development }
+    - { id: 2735133, name: 'Sales: TSR Recycling GmbH & Co. KG', serviceId: 253445, serviceName: Development }
     - { id: 1147952, name: 'Sonstige interne Aufgaben / Other internal Tasks ', serviceId: 344427, serviceName: 'Non-project: Sonstiges / Others' }
     - { id: 2851934, name: 'The Zene - Q4 2019 Release', serviceId: 253445, serviceName: Development }
     - { id: 2737415, name: 'WTV | Digital City Advisor', serviceId: 253445, serviceName: Development }
-    - { id: 2815457, name: 'SALES - Faurecia | Android App für Massagematte 2019', serviceId: 253445, serviceName: Development }
+    - { id: 2672737, name: 'Barmer | Pflegekontingent 2019', serviceId: 253445, serviceName: Development }
