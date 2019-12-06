@@ -171,7 +171,7 @@
 					<tr>
 						<td scope="row"><input type="checkbox" id="{{ item.id }}" value="{{ item.id }}" name="{{ item.id }}" ></input></td>
 						<td scope="row">{{ item.title }} </td>
-						<td scope="row">{{ item.StartDateTime|date('H:i') }} - {{ item.EndDateTime|date('H:i') }} </td>
+						<td scope="row">{{ item.startTime }} - {{ item.endTime }} </td>
 						<td scope="row">{{item.duration }} </td>
 					</tr>
 				{% endfor %}

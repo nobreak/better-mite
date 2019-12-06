@@ -18,6 +18,8 @@ class ApplicationGlobalsService
     }
 
 
+    // this is a temporay list which will be created when we have suggestions for day
+    // it' is a list of SuggestionMiteEntry objects
     public function getSuggestionList()
     {
         return $this->session->get('suggestion_list');
@@ -31,6 +33,22 @@ class ApplicationGlobalsService
     public function resetSuggestionList()
     {
       $this->session->remove('suggestion_list' );
+    }
+
+
+    // this add objects of type CalendarEventEntity to the list of SuggestionMiteEntries
+    public function addCalendarEventsToSuggestionList($calendarEvents, $date)
+    {
+      // get the suggestion list
+      $suggestions = $this->getSuggestionList();
+
+      // add the new SuggestionMiteEntries 
+      foreach ($calendarEvents as $event) {
+        array_push($suggestions, $event);
+      }
+
+      $this->setSuggestionList($suggestions);
+
     }
    
 }

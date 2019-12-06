@@ -6,7 +6,7 @@ namespace App\Service;
 
 
 use Google_Service_Calendar;
-use App\Entity\CalendarEventEntity;
+use App\Entity\CalendarSuggestionMiteEntry;
 
 
 class GoogleCalendarService
@@ -25,7 +25,7 @@ class GoogleCalendarService
 
 
 
-	function getCalendarEvents($date)
+	function getCalendarSuggestionMiteEntries($date)
   	{
   		$service = $this->service;
         // Print the next 10 events on the user's calendar.
@@ -43,24 +43,24 @@ class GoogleCalendarService
         $items = [];
 
         foreach ($events as $event) {
-            $item  = new CalendarEventEntity($event);
+            $item  = new CalendarSuggestionMiteEntry($event);
             $items[] = $item;
         }
 
         return $items;
 
-        if (empty($events)) {
-            echo "<br>No upcoming events found.\n";
-        } else {
-            print "Upcoming events:\n";
-            foreach ($events as $event) {
-              $start = $event->start->dateTime;
-              if (empty($start)) {
-                $start = $event->start->date;
-              }
-              printf("<br> %s (%s)\n", $event->getSummary(), $start);
-            } 
-        } 
+        // if (empty($events)) {
+        //     echo "<br>No upcoming events found.\n";
+        // } else {
+        //     print "Upcoming events:\n";
+        //     foreach ($events as $event) {
+        //       $start = $event->start->dateTime;
+        //       if (empty($start)) {
+        //         $start = $event->start->date;
+        //       }
+        //       printf("<br> %s (%s)\n", $event->getSummary(), $start);
+        //     } 
+        // } 
   	}
 
 

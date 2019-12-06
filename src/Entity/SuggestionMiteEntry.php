@@ -6,6 +6,8 @@ use App\Entity\Project;
 use App\Entity\Service;
 use App\Entity\MiteEntry;
 
+use Google_Service_Calendar_Event;
+
 
 class SuggestionMiteEntry extends MiteEntry
 {
@@ -16,6 +18,7 @@ class SuggestionMiteEntry extends MiteEntry
     {
         $this->id = uniqid();
     }
+
 
 
     public function getId(): ?string

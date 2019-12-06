@@ -79,7 +79,7 @@ class MiteController extends AbstractController
         }
 
 
-        $events = $calendarService->getCalendarEvents($date);
+        $events = $calendarService->getCalendarSuggestionMiteEntries($date);
         $miteEntries = $miteService->getMiteEntries($year, $month, $day);
         $miteProjects = $miteService->getMiteProjects();
         $miteServices = $miteService->getMiteServices();
@@ -211,6 +211,41 @@ class MiteController extends AbstractController
       return $this->redirectToRoute('show_mite_entries_by_date', $parameters);
     }
 
+
+    /**
+      * @Route("/mite/addCalendarEventsToSuggestions/{date}", name="add_calendar_events_to_suggestions")
+      */
+    public function addCalendarEventsToSuggestions(ApplicationGlobalsService $appGlobalsService, Request $request, $date)
+    {
+      // all temp saved suggestions
+      $allSuggestions = $appGlobalsService->getSuggestionList();
+
+      // find selected suggestions from form in this
+      foreach ($request->request as $key => $value) {
+        $item;
+        foreach ($allSuggestions as $suggestion)
+        {
+            if ($suggestion->getId() == $value) {
+              $item = $suggestion;
+              break;
+            }
+        }
+
+        // add it to mite        
+        $item->setDate($date);
+        $miteService->addMiteEntry($item);
+      }
+
+      $appGlobalsService->resetSuggestionList();
+
+      $year = date('Y', strtotime($date));
+      $month = date('m', strtotime($date));
+      $day = date('d', strtotime($date));
+      // show the updated list
+      $parameters = ['miteService' => $miteService, 'year' => $year, 'month' => $month, 'day' => $day];
+
+      return $this->redirectToRoute('show_mite_entries_by_date', $parameters);
+    }
 
 
 
