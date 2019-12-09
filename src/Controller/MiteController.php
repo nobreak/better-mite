@@ -66,6 +66,30 @@ class MiteController extends AbstractController
         $date = date('Y-m-d', mktime(0,0,0,$month, $day, $year));
         $weekday = date("w", mktime(0,0,0,$month, $day, $year));    
 
+
+        /** GETTING DATA FROM MITE **/
+        // get all mite entries for this day
+        $miteEntries = $miteService->getMiteEntries($year, $month, $day);
+        // get ALL projects for some comboboxes from mite
+        $miteProjetcs = $miteService->getMiteProjects();
+        // get ALL services for some comboboxes from mite
+        $miteServices = $miteService->getMiteServices();
+
+
+        /** GETTING DATA FROM CALENDAR **/
+        // get all calendar events for this day
+        $events = $calendarService->getCalendarSuggestionMiteEntries($date);
+
+        /** GETTING DATA FROM USER CONFIG **/
+        // get user defined projects for some comoboxes from user configuration
+        $miteDefaultProjects = $defaultProjectsService->readDefaultProjectObjects(); 
+        $userEntity = $userService->readUser();
+
+
+        // calculate missing time for mite entries on this day
+        $missingTime = $this->calculateMissingTimeMiteEntries($miteEntries, $userEntity);
+
+
         $addMiteEntry = new MiteEntry();
         $addMiteEntry->setDate($date);
 
@@ -79,36 +103,6 @@ class MiteController extends AbstractController
             $miteService->addMiteEntry($newMiteEntry);
         }
 
-
-        $events = $calendarService->getCalendarSuggestionMiteEntries($date);
-        $miteEntries = $miteService->getMiteEntries($year, $month, $day);
-
-
-        $miteProjetcs = $miteService->getMiteProjects();
-        $miteDefaultProjects = $defaultProjectsService->readDefaultProjectObjects(); 
-
-        $miteServices = $miteService->getMiteServices();
-        
-
-
-        // calculate missing time
-        $countMinutes = 0;
-        foreach ($miteEntries as $key => $entry) {
-          $countMinutes += $entry->time_entry->minutes;
-        }
-
-        $userEntity = $userService->readUser();
-        
-        $maxMinutes = $userEntity->GetWorkingHoursPerDay()*60;
-        $missingMinutes = $maxMinutes - $countMinutes;
-        if ($missingMinutes < 0)
-          $missingMinutes = 0;
-
-        $currentPercent = ($countMinutes / $maxMinutes) * 100;
-        $hours    = (int)($missingMinutes / 60);
-        $minutes  = $missingMinutes - ($hours * 60);   
-
-        $missingTime = new \DateTime($hours.":".$minutes);
         
 
         // provide JS array with mappings for projects and assigned default servers
@@ -139,7 +133,6 @@ class MiteController extends AbstractController
 
 
         // build suggestion list for today
-        
         $dailyMiteEntries = $dailyMiteEntriesService->readDailyMiteEntriesForWeekday($weekday);            
         $suggestionList = $suggestionListService->createSuggestionList($dailyMiteEntries, $events, $miteEntries);
 
@@ -150,11 +143,11 @@ class MiteController extends AbstractController
             'events' => $events,
             'date' => $date,
             'miteEntries' => $miteEntries,
-            'countMinutes' => $countMinutes,
-            'missingMinutes' => $missingMinutes,
-            'missingMinutesStr' => $missingTime->format('H:i')." hours",
-            'maxMinutes' => $maxMinutes,
-            'currentPercent' => $currentPercent,
+            'countMinutes' => $missingTime->currentMinutes,
+            'missingMinutes' => $missingTime->minutes,
+            'missingMinutesStr' => $missingTime->dateTime->format('H:i')." hours",
+            'maxMinutes' => $missingTime->maxMinutes,
+            'currentPercent' => $missingTime->inPercent,
             'miteProjects' => $miteProjetcs,
             'miteDefaultProjects' => $miteDefaultProjects,
             'miteServices' => $miteServices,
@@ -247,6 +240,45 @@ class MiteController extends AbstractController
     }
 
 
+    private function calculateMissingTimeMiteEntries($miteEntries, $userEntity)
+    {
+        // get current booked time
+        $currentBookedMinutes = 0;
+        foreach ($miteEntries as $key => $entry) {
+          $currentBookedMinutes += $entry->time_entry->minutes;
+        }
 
+        // get max time for this user
+        $maxMinutes = $userEntity->GetWorkingHoursPerDay()*60;
+
+        return new MissingTime($maxMinutes, $currentBookedMinutes);
+    }
+
+}
+
+class MissingTime 
+{
+    public $dateTime; // missing time as DateTime obj
+    public $inPercent; // missing time in percent
+    public $minutes; // missing time in minutes
+    public $currentMinutes;
+    public $maxMinutes;
+
+    public function __construct($maxMinutes, $currentMinutes)
+    {
+        $this->maxMinutes = $maxMinutes;
+        $this->currentMinutes = $currentMinutes;
+
+        $this->minutes = $this->maxMinutes - $this->currentMinutes;
+        if ($this->minutes < 0)
+          $this->minutes = 0;
+
+        $this->inPercent = ($currentMinutes / $maxMinutes) * 100;
+
+        $hours    = (int)($this->minutes / 60);
+        $restMinutes  = $this->minutes - ($hours * 60);   
+
+        $this->dateTime = new \DateTime($hours.":".$restMinutes);
+    }
 }
 
