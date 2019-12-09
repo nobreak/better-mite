@@ -37,7 +37,7 @@ class ApplicationGlobalsService
 
 
     // this add objects of type CalendarEventEntity to the list of SuggestionMiteEntries
-    public function addCalendarEventsToSuggestionList($calendarEvents, $date)
+    public function addCalendarEventsToSuggestionList($calendarEvents)
     {
       // get the suggestion list
       $suggestions = $this->getSuggestionList();

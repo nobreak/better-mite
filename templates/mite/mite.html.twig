@@ -177,6 +177,19 @@
 				{% endfor %}
 				</tbody>
 				</table>
+				<select id="calendarProject" name="calendarProject" required="required" class="form-control">
+					<option value="" selected="selected">Select a project</option>
+					{% for item in miteDefaultProjects %}
+						<option value="{{ item.id }}">{{ item.name }}</option>
+					{% endfor %}						
+				</select><br>
+				<select id="calendarService" name="calendarService" required="required" class="form-control">
+					<option value="" selected="selected">Select a service</option>
+					{% for item in miteServices %}
+						<option value="253445">Development</option>
+					{% endfor %}						
+				</select>					
+
 				<button type="submit" class="btn btn-primary">Add selected to suggestions</button>
 			</form>	
 

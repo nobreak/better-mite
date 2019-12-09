@@ -7,11 +7,14 @@ namespace App\Service;
 use Symfony\Component\Asset\UrlPackage;
 use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
 use Symfony\Component\Yaml\Yaml;
+use App\Entity\Project;
 
 
 class DefaultProjectsService
 {
-	public function readDefaultProjects()
+
+    // read the yaml file and return all configured default projects as array of StdClass
+	  public function readDefaultProjects()
     {
       $assetPath = "file://".$_SERVER['DOCUMENT_ROOT'] . "assets";
       $assets = new UrlPackage($assetPath,new EmptyVersionStrategy());
@@ -26,6 +29,23 @@ class DefaultProjectsService
 
       return $yamlDefaultProjects->projects;
     }
+
+
+    // read the yaml file and return all configured default projects as array of Project::class
+    public function readDefaultProjectObjects()
+    {
+      $miteProjStdClass = $this->readDefaultProjects();
+
+      $projects = array();
+      foreach ($miteProjStdClass as $key => $value) {
+            $project = new Project($value->id, $value->name );
+            array_push($projects, $project);
+      }
+
+      return $projects; 
+    }
+
+
 
     public function AddDefaultProject($newDefaultProject)
     {
