@@ -1,0 +1,27 @@
+<h4>Deine Kalendereinträge am {{date}}:</h4>
+
+			{% if calEventsToSuggestionsForm  %}
+				{{ form_start(calEventsToSuggestionsForm) }}
+					<table>
+					<table class="table table-striped">
+					<tbody>
+						{% for event in calEventsToSuggestionsForm.events %}
+							<tr>
+								<td scope="row">{{ form_row(event.toSuggestions)}}</td>
+								<td scope="row">{{ form_label(event.title, event.title.vars.value)}}</td>
+								<td scope="row">{{ form_label(event.startTime, event.startTime.vars.value)}} - {{ form_label(event.endTime, event.endTime.vars.value)}}</td>
+								<td scope="row">{{ form_label(event.duration, event.duration.vars.value)}}</td>
+							</tr>
+						{% endfor %}	
+					</tbody>
+					</table>
+					{{ form_row(calEventsToSuggestionsForm.project, {'attr': {'class': 'form-control'}}) }}<br>
+					{{ form_row(calEventsToSuggestionsForm.service, {'attr': {'class': 'form-control'}}) }}<br>
+					{{ form_row(calEventsToSuggestionsForm.saveBtn, {'attr': {'class': 'btn btn-primary'}, 'label': 'Add Entry'}) }}
+					{{ form_row(calEventsToSuggestionsForm.date) }}
+			 	{{ form_end(calEventsToSuggestionsForm, {'render_rest': false}) }}
+			{% else %}
+				<div class="alert alert-info" role="alert">
+					No calendar entries exists for this day.
+				</div>	
+			{% endif %}	

@@ -18,7 +18,9 @@ use App\Service\GoogleCalendarService;
 
 use App\Entity\MiteEntry;
 use App\Entity\Project;
+use App\Entity\CalendarSuggestionMiteEntries;
 use App\Form\AddMiteEntryFormType;
+use App\Form\CalendarEventsToSuggestionsFormType;
 
 require __DIR__ . '/../../vendor/autoload.php';
 
@@ -66,6 +68,18 @@ class MiteController extends AbstractController
         $date = date('Y-m-d', mktime(0,0,0,$month, $day, $year));
         $weekday = date("w", mktime(0,0,0,$month, $day, $year));    
 
+        /** DO WE HAVE TO HANDLE AT FIRST A FORM REQUEST ? **/
+        $addMiteEntry = new MiteEntry();
+        $addMiteEntry->setDate($date);
+
+        $addMiteEntryForm = $this->createForm(AddMiteEntryFormType::class, $addMiteEntry);
+        $addMiteEntryForm->handleRequest($request);
+        if ($addMiteEntryForm->isSubmitted() && $addMiteEntryForm->isValid()) {
+            $newMiteEntry = $addMiteEntryForm->getData();
+
+            $miteService->addMiteEntry($newMiteEntry);
+        }
+
 
         /** GETTING DATA FROM MITE **/
         // get all mite entries for this day
@@ -90,18 +104,7 @@ class MiteController extends AbstractController
         $missingTime = $this->calculateMissingTimeMiteEntries($miteEntries, $userEntity);
 
 
-        $addMiteEntry = new MiteEntry();
-        $addMiteEntry->setDate($date);
-
-        $addMiteEntryForm = $this->createForm(AddMiteEntryFormType::class, $addMiteEntry);
-
-
-        $addMiteEntryForm->handleRequest($request);
-        if ($addMiteEntryForm->isSubmitted() && $addMiteEntryForm->isValid()) {
-            $newMiteEntry = $addMiteEntryForm->getData();
-
-            $miteService->addMiteEntry($newMiteEntry);
-        }
+        $calEventsToSuggestionsForm = $this->createForm(CalendarEventsToSuggestionsFormType::class, $events); 
 
         
 
@@ -140,7 +143,6 @@ class MiteController extends AbstractController
         $appGlobalsService->setSuggestionList($suggestionList);
 
         return $this->render('mite/mite.html.twig', [
-            'events' => $events,
             'date' => $date,
             'miteEntries' => $miteEntries,
             'countMinutes' => $missingTime->currentMinutes,
@@ -152,6 +154,7 @@ class MiteController extends AbstractController
             'miteDefaultProjects' => $miteDefaultProjects,
             'miteServices' => $miteServices,
             'addMiteEntryForm' => $addMiteEntryForm->createView(),
+            'calEventsToSuggestionsForm' => $calEventsToSuggestionsForm->createView(),
             'serviceMapping' => $js,
             'suggestionList' => $suggestionList,
         ]);

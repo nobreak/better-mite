@@ -156,48 +156,11 @@
 
 {% block rightbody %}
 		<a class="btn btn-primary" data-toggle="collapse" href="#collapseCalendar" role="button" aria-expanded="true" aria-controls="collapseCalendar">
-    Calendar Entries
+    Calendar Events
   		</a>
   		<div class="collapse show" id="collapseCalendar">
-			<h3>Deine Kalendereinträge am {{date}}:</h3>
-
-			{% if events  %}
-				<button type="button" class="btn btn-link">Mark All</button>
-			<form>
-				<table>
-				<table class="table table-striped">
-				<tbody>
-				{% for item in events %}
-					<tr>
-						<td scope="row"><input type="checkbox" id="{{ item.id }}" value="{{ item.id }}" name="{{ item.id }}" ></input></td>
-						<td scope="row">{{ item.title }} </td>
-						<td scope="row">{{ item.startTime }} - {{ item.endTime }} </td>
-						<td scope="row">{{item.duration }} </td>
-					</tr>
-				{% endfor %}
-				</tbody>
-				</table>
-				<select id="calendarProject" name="calendarProject" required="required" class="form-control">
-					<option value="" selected="selected">Select a project</option>
-					{% for item in miteDefaultProjects %}
-						<option value="{{ item.id }}">{{ item.name }}</option>
-					{% endfor %}						
-				</select><br>
-				<select id="calendarService" name="calendarService" required="required" class="form-control">
-					<option value="" selected="selected">Select a service</option>
-					{% for item in miteServices %}
-						<option value="253445">Development</option>
-					{% endfor %}						
-				</select>					
-
-				<button type="submit" class="btn btn-primary">Add selected to suggestions</button>
-			</form>	
-
-			{% else %}
-				<div class="alert alert-info" role="alert">
-					No calendar entries exists for this day.
-				</div>	
-			{% endif %}	
+			{{ include('mite/calendar_events.html.twig') }}
+			
 		</div> <!-- collapse //-->
 {% endblock %}
 

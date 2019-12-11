@@ -11,12 +11,15 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
+use App\Form\CalendarEventFormType;
 use App\Service\MiteService;
 use App\Entity\DailyMiteEntryEntity;
 use App\Entity\Project;
 use App\Entity\Service;
+use App\Entity\CalendarSuggestionMiteEntries;
 
 
 
@@ -32,15 +35,16 @@ class CalendarEventsToSuggestionsFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('TEST', CollectionType::class, [
-                'entry_type' => EmailType::class,
-                // these options are passed to each "email" type
-                'entry_options' => [
-                    'attr' => ['class' => 'email-box'],
-                    ],
-                ])
+            ->add('events', CollectionType::class, [
+                 'entry_type' => CalendarEventFormType::class,
+                 'entry_options' => [
+                       'label' => false 
+            //         'attr' => ['class' => 'email-box'],
+                     ],
+                 ])
             ->add('project', EntityType::class,  [
                 'class' => Project::class,
+                'mapped' => false,
                 'label' => false,
                 'placeholder' => 'Select a project',
                 'choices' => $this->getMiteProjects(), // request all available mite projects
@@ -48,12 +52,16 @@ class CalendarEventsToSuggestionsFormType extends AbstractType
                 'choice_value' => 'id', 
             ])
             ->add('service', ChoiceType::class,  [
+                'mapped' => false,
                 'label' => false,
                 'placeholder' => 'Select a service',
                 'choices' => $this->getMiteServices(), 
                 'choice_label' => 'name', 
                 'choice_value' => 'id' 
             ])
+            ->add('date', HiddenType::class, [
+                'mapped' => false
+            ] )
             ->add('saveBtn', SubmitType::class);
     }
 
@@ -84,7 +92,7 @@ class CalendarEventsToSuggestionsFormType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => DailyMiteEntryEntity::class,
+            'data_class' => CalendarSuggestionMiteEntries::class,
         ]);
     }
 

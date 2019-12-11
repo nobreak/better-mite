@@ -35,12 +35,13 @@ class CalendarSuggestionMiteEntry extends SuggestionMiteEntry
         $message = "(" . $this->getStartTime() . " to " . $this->getEndTime().") MEETING:" .$googleEvent->getSummary(); 
         $this->setMessage($message);
 
-        $this->title = $googleEvent->getSummary();
+        $this->setTitle($googleEvent->getSummary());
 
         $diff = $startAsDateTime->diff($endAsDateTime);
         $this->setMinutes = $diff->i; 
         $this->setDuration($diff->format("%H:%I"));
     }
+
 
     public function setStartTime(string $startTime)
     {
@@ -73,7 +74,7 @@ class CalendarSuggestionMiteEntry extends SuggestionMiteEntry
         return $this->duration;
     }
 
-    public function setTItle(string $title)
+    public function setTitle(string $title)
     {
         $this->title = $title;
     }
