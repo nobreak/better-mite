@@ -20,7 +20,7 @@ use App\Entity\MiteEntry;
 use App\Entity\Project;
 use App\Entity\CalendarSuggestionMiteEntries;
 use App\Form\AddMiteEntryFormType;
-use App\Form\CalendarEventsToSuggestionsFormType;
+use App\Form\CalendarEventsFormType;
 
 require __DIR__ . '/../../vendor/autoload.php';
 
@@ -90,9 +90,15 @@ class MiteController extends AbstractController
         $miteServices = $miteService->getMiteServices();
 
 
-        /** GETTING DATA FROM CALENDAR **/
+        /** GETTING DATA FROM CALENDAR AND CREAT FORM FOR IT**/
         // get all calendar events for this day
-        $events = $calendarService->getCalendarSuggestionMiteEntries($date);
+        $events = $calendarService->getCalendarMiteEntries($date);
+        $calendarEventsForm = $this->createForm(CalendarEventsFormType::class, $events, [
+            'action' => $this->generateUrl('book_calendar_events', [
+              'date' => $date
+            ])
+        ]); 
+
 
         /** GETTING DATA FROM USER CONFIG **/
         // get user defined projects for some comoboxes from user configuration
@@ -104,7 +110,6 @@ class MiteController extends AbstractController
         $missingTime = $this->calculateMissingTimeMiteEntries($miteEntries, $userEntity);
 
 
-        $calEventsToSuggestionsForm = $this->createForm(CalendarEventsToSuggestionsFormType::class, $events); 
 
         
 
@@ -154,11 +159,32 @@ class MiteController extends AbstractController
             'miteDefaultProjects' => $miteDefaultProjects,
             'miteServices' => $miteServices,
             'addMiteEntryForm' => $addMiteEntryForm->createView(),
-            'calEventsToSuggestionsForm' => $calEventsToSuggestionsForm->createView(),
+            'calendarEventsForm' => $calendarEventsForm->createView(),
             'serviceMapping' => $js,
             'suggestionList' => $suggestionList,
         ]);
 
+    }
+
+
+    /**
+     * @Route("/mite/book_calendar_events/{date}", name="book_calendar_events")  
+     */
+    public function bookCalendarEvents(MiteService $miteService, Request $request, $date)
+    {
+      echo "FUUUUUUNNZT";
+
+      // // get the CalendarSuggestionMiteEntry from array from request 
+      // foreach ($request->request as $key => $value) {
+      //   $item;
+
+      //   // add it to mite        
+      //   $item->setDate($date);
+      //   $miteService->addMiteEntry($item);
+      // }
+
+
+      return $this->redirectToMiteEntries($date, $miteService);
     }
 
 

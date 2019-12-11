@@ -16,10 +16,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 use App\Service\MiteService;
-use App\Entity\DailyMiteEntryEntity;
-use App\Entity\Project;
-use App\Entity\Service;
-use App\Entity\CalendarSuggestionMiteEntry;
+use App\Entity\CalendarMiteEntry;
 
 
 
@@ -61,7 +58,7 @@ class CalendarEventFormType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => CalendarSuggestionMiteEntry::class,
+            'data_class' => CalendarMiteEntry::class,
         ]);
     }
 

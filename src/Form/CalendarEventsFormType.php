@@ -13,17 +13,18 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\FormEvents;
 
 use App\Form\CalendarEventFormType;
 use App\Service\MiteService;
-use App\Entity\DailyMiteEntryEntity;
 use App\Entity\Project;
 use App\Entity\Service;
-use App\Entity\CalendarSuggestionMiteEntries;
+use App\Entity\CalendarMiteEntries;
 
 
 
-class CalendarEventsToSuggestionsFormType extends AbstractType
+// This form list for you Calendar Events
+class CalendarEventsFormType extends AbstractType
 {
 
     public function __construct( MiteService $miteService)
@@ -36,10 +37,10 @@ class CalendarEventsToSuggestionsFormType extends AbstractType
     {
         $builder
             ->add('events', CollectionType::class, [
+                 'required' => false, // #TODO: a minimum of one selected checkbox is required
                  'entry_type' => CalendarEventFormType::class,
                  'entry_options' => [
                        'label' => false 
-            //         'attr' => ['class' => 'email-box'],
                      ],
                  ])
             ->add('project', EntityType::class,  [
@@ -63,6 +64,30 @@ class CalendarEventsToSuggestionsFormType extends AbstractType
                 'mapped' => false
             ] )
             ->add('saveBtn', SubmitType::class);
+
+
+        /** @var \closure $myExtraFieldValidator **/
+        $myExtraFieldValidator = function(FormEvent $event){
+            $form = $event->getForm();
+
+            echo "test";
+            //$myExtraField = $form->get('events')->getData();
+            $calEventForm = $form->get('events');
+            foreach ($calEventForm as $key => $value) {
+                echo $value->get('toSuggestions');
+            }
+
+            // if (empty($myExtraField)) {
+            //   $form['myExtraField']->addError(new FormError("myExtraField must not be empty"));
+            // } else {
+            //     foreach ($myExtraField as $calEvent) {
+            //         if ($calEvent->get)
+            //     }
+            // }
+        };
+
+        // adding the validator to the FormBuilderInterface
+        $builder->addEventListener(FormEvents::POST_SUBMIT, $myExtraFieldValidator);
     }
 
     function getMiteProjects()
@@ -92,7 +117,7 @@ class CalendarEventsToSuggestionsFormType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => CalendarSuggestionMiteEntries::class,
+            'data_class' => CalendarMiteEntries::class,
         ]);
     }
 

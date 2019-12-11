@@ -2,15 +2,21 @@
 
 
 
-use App\Entity\CalendarSuggestionMiteEntry;
+use App\Entity\CalendarMiteEntry;
 
 namespace App\Entity;
 
 
 
 
-class CalendarSuggestionMiteEntries 
+class CalendarMiteEntries 
 {
+    /**
+     * @Assert\Count(
+     *      min = 1,
+     *      minMessage = "You must select at least one calendar event",
+     * )
+     */
     protected $events; // array of CalendarSuggestionMiteEntry objects - used for a form
 
 
@@ -33,7 +39,7 @@ class CalendarSuggestionMiteEntries
         return $this->events;
     }
 
-    public function addEvent(CalendarSuggestionMiteEntry $event)
+    public function addEvent(CalendarMiteEntry $event)
     {
         array_push($this->events, $event );
     }

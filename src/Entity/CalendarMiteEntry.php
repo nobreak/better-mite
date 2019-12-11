@@ -12,7 +12,7 @@ use Google_Service_Calendar_Event;
 
 
 
-class CalendarSuggestionMiteEntry extends SuggestionMiteEntry
+class CalendarMiteEntry extends SuggestionMiteEntry
 {
     private $startTime; // used for representation in twig
     private $endTime; // used for representation in twig

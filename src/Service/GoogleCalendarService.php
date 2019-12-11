@@ -6,8 +6,8 @@ namespace App\Service;
 
 
 use Google_Service_Calendar;
-use App\Entity\CalendarSuggestionMiteEntry;
-use App\Entity\CalendarSuggestionMiteEntries;
+use App\Entity\CalendarMiteEntry;
+use App\Entity\CalendarMiteEntries;
 
 
 class GoogleCalendarService
@@ -26,7 +26,7 @@ class GoogleCalendarService
 
 
 
-	function getCalendarSuggestionMiteEntries($date): CalendarSuggestionMiteEntries
+	function getCalendarMiteEntries($date): CalendarMiteEntries
   	{
   		$service = $this->service;
         // Print the next 10 events on the user's calendar.
@@ -41,11 +41,11 @@ class GoogleCalendarService
         $results = $service->events->listEvents($calendarId, $optParams);
         $events = $results->getItems();
 
-        $result = new CalendarSuggestionMiteEntries();
+        $result = new CalendarMiteEntries();
 
 
         foreach ($events as $event) {
-            $item  = new CalendarSuggestionMiteEntry($event);
+            $item  = new CalendarMiteEntry($event);
             $result->addEvent($item);
         }
 
