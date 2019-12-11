@@ -43,8 +43,8 @@ class CalendarEventsFormType extends AbstractType
                        'label' => false 
                      ],
                  ])
-            ->add('project', EntityType::class,  [
-                'class' => Project::class,
+            ->add('project', ChoiceType::class,  [
+//                'class' => Project::class,
                 'mapped' => false,
                 'label' => false,
                 'placeholder' => 'Select a project',
@@ -94,7 +94,7 @@ class CalendarEventsFormType extends AbstractType
     {
         $projectsStdClass = $this->miteService->getMiteProjects();
         $projects = array();
-        foreach ($projects as $key => $value) {
+        foreach ($projectsStdClass as $key => $value) {
             $project = new Project($value->project->id, $value->project->name);
             array_push($projects, $project);
         }
